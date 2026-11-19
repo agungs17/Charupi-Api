@@ -12,7 +12,7 @@ RUN cargo chef prepare --recipe-path recipe.json
 # Stage 3: Builder
 FROM chef AS builder
 COPY --from=planner /app/recipe.json recipe.json
-# Build dependencies - this is the caching Docker layer!
+# Build dependencies - caching Docker layer
 RUN cargo chef cook --release --recipe-path recipe.json
 # Build application
 COPY . .
@@ -23,20 +23,16 @@ FROM debian:bookworm-slim AS runtime
 WORKDIR /app
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
-    libsqlite3-0 \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /app/target/release/charupi-api /usr/local/bin/charupi-api
 COPY .env.example /app/.env
-
-# Create data directory for SQLite
-RUN mkdir -p /app/data
+COPY docs /app/docs
 
 ENV HOST=0.0.0.0
 ENV PORT=8080
 ENV ENVIRONMENT=production
-ENV DATABASE_URL=sqlite:///app/data/charupi.db?mode=rwc
 
 EXPOSE 8080
 
