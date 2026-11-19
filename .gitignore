@@ -1,0 +1,17 @@
+/target/
+**/*.rs.bk
+Cargo.lock
+
+# Environment & secrets
+.env
+*.env.local
+
+# Databases & local storage
+*.db
+*.db-shm
+*.db-wal
+data/
+
+# OS artifacts
+.DS_Store
+Thumbs.db

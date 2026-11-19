@@ -1,0 +1,23 @@
+services:
+  charupi-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: charupi-api
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8080
+      - ENVIRONMENT=production
+      - DATABASE_URL=sqlite:///app/data/charupi.db?mode=rwc
+      - OMNIROUTE_BASE_URL=http://host.docker.internal:20128/v1
+      - OMNIROUTE_API_KEY=${OMNIROUTE_API_KEY:-}
+      - OMNIROUTE_DEFAULT_MODEL=${OMNIROUTE_DEFAULT_MODEL:-gpt-4o-mini}
+      - OMNIROUTE_EMBEDDING_MODEL=${OMNIROUTE_EMBEDDING_MODEL:-text-embedding-3-small}
+      - RUST_LOG=charupi_api=info,tower_http=info
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
