@@ -1,10 +1,14 @@
+use axum::extract::DefaultBodyLimit;
 use tokio::net::TcpListener;
 use tokio::signal;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 use charupi_api::{
     config::AppConfig,
-    middleware::{cors_layer, trace_layer},
+    middleware::{
+        catch_panic_layer, cors_layer, propagate_request_id_layer, set_request_id_layer,
+        trace_layer,
+    },
     routes::create_router,
     state::AppState,
 };
@@ -34,10 +38,14 @@ async fn main() -> anyhow::Result<()> {
     // 3. Inisialisasi Shared Application State
     let state = AppState::new(config.clone());
 
-    // 4. Rakit Router dengan Layer Middleware (CORS & Tracing Logging)
+    // 4. Rakit Router dengan Layer Middleware Fondasi Produksi
     let app = create_router(state)
-        .layer(trace_layer())
-        .layer(cors_layer());
+        .layer(DefaultBodyLimit::max(10 * 1024 * 1024)) // 1. Proteksi Payload Request Maksimal 10 MB
+        .layer(catch_panic_layer())                     // 2. Proteksi Panic Recovery (Server Tidak Pernah Crash)
+        .layer(cors_layer())                            // 3. CORS Policy & Header Exposure
+        .layer(trace_layer())                           // 4. Structured Logging dengan Request ID
+        .layer(propagate_request_id_layer())            // 5. Propagasi Header X-Request-ID ke Klien
+        .layer(set_request_id_layer());                 // 6. Generate / Parse X-Request-ID Header Unik
 
     // 5. Binding TCP Listener
     let addr = config.socket_addr()?;

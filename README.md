@@ -41,7 +41,10 @@ Charupi-Api/
 ### Running the Server
 
 ```bash
-# Debug mode
+# Development mode (Hot Reload with auto-check & auto-restart)
+cargo dev
+
+# Normal run
 cargo run
 
 # Release mode (optimized)

@@ -24,35 +24,101 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HealthResponse'
+                $ref: '#/components/schemas/HealthApiResponse'
               example:
-                status: "ok"
-                service: "charupi-api"
-                version: "0.1.0"
-                environment: "development"
+                success: true
+                message: "Service is healthy"
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                message: "Internal server error"
+                code: "INTERNAL_ERROR"
 components:
   schemas:
-    HealthResponse:
+    HealthApiResponse:
       type: object
       required:
-        - status
-        - service
-        - version
-        - environment
+        - success
+        - message
       properties:
-        status:
+        success:
+          type: boolean
+          example: true
+        message:
           type: string
-          description: Operational status of the service
-          example: "ok"
-        service:
+          example: "Service is healthy"
+
+    PaginationMeta:
+      type: object
+      required:
+        - page
+        - limit
+        - total
+      properties:
+        page:
+          type: integer
+          example: 1
+        limit:
+          type: integer
+          example: 10
+        total:
+          type: integer
+          example: 52
+
+    ErrorResponse:
+      type: object
+      required:
+        - success
+        - message
+        - code
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
           type: string
-          description: Name of the service
-          example: "charupi-api"
-        version:
+          example: "Resource not found"
+        code:
           type: string
-          description: Semantic application version
-          example: "0.1.0"
-        environment:
+          description: Stable uppercase SNAKE_CASE error code
+          example: "NOT_FOUND"
+
+    ValidationErrorDetail:
+      type: object
+      required:
+        - field
+        - message
+      properties:
+        field:
           type: string
-          description: Current runtime environment
-          example: "development"
+          example: "email"
+        message:
+          type: string
+          example: "Invalid email format"
+
+    ValidationErrorResponse:
+      type: object
+      required:
+        - success
+        - message
+        - code
+        - details
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: "Validation failed"
+        code:
+          type: string
+          example: "VALIDATION_ERROR"
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationErrorDetail'
