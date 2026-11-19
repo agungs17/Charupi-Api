@@ -1,8 +1,8 @@
 # Charupi-Api
 
 > **Modular Axum Service for Charupi**  
-> Disusun dengan struktur modular terstandarisasi (**routes**, **handlers**, **middleware**, **config**, **error**, **state**) yang saat ini menjalankan endpoint `/health`.  
-> Disertai skill komprehensif **`rust-axum-best-practices`** untuk referensi arsitektur dan performa saat pengembangan fitur backend lanjutan dimulai.
+> Built with a standardized modular architecture (**routes**, **handlers**, **middleware**, **config**, **error**, **state**) running on Rust Axum, with the `/health` endpoint enabled.  
+> Accompanied by the comprehensive **`rust-axum-best-practices`** skill for architectural guidance and high-performance backend engineering.
 
 [![Scalar API Documentation](https://img.shields.io/badge/Scalar-API%20Reference-8A2BE2?style=for-the-badge&logo=openapi-initiative&logoColor=white)](http://localhost:8080/docs/)
 
@@ -10,33 +10,29 @@
 
 ## 📖 API Documentation (Scalar Interactive Reference)
 
-Dokumentasi API interaktif menggunakan **Scalar** (modern OpenAPI reference dengan Dark Mode & multi-language code snippets otomatis).
+Interactive API documentation powered by **Scalar** (a modern OpenAPI reference featuring built-in Dark Mode and automatic multi-language code snippets).
 
-### Cara Mengakses:
+### How to Access:
 
-1. **Secara Lokal (Direct dari Server Rust):**
-   Cukup jalankan server (`cargo run`), lalu buka browser ke:  
-   👉 **[http://localhost:8080/docs/](http://localhost:8080/docs/)**
-
-2. **Secara Online (GitHub Pages / Cloudflare Pages):**  
-   👉 **[https://agungs17.github.io/Charupi-Api/](https://agungs17.github.io/Charupi-Api/)**
+Start the server (`cargo run`), then open your browser at:  
+👉 **[http://localhost:8080/docs/](http://localhost:8080/docs/)**
 
 ---
 
-## Struktur Folder Modular
+## Modular Project Structure
 
 ```
 Charupi-Api/
-├── Cargo.toml                  # Dependensi crate (Axum, Tokio, Tower-HTTP)
+├── Cargo.toml                  # Crate dependencies (Axum, Tokio, Tower-HTTP)
 ├── Dockerfile                  # Multi-stage container build
 ├── docker-compose.yml          # Container orchestration
-├── .env.example                # Template konfigurasi environment
+├── .env.example                # Environment configuration template
 ├── docs/                       # Scalar API Reference
 │   ├── index.html              # Scalar web client (@scalar/api-reference)
-│   └── openapi.yaml            # Spesifikasi OpenAPI 3.0.3
+│   └── openapi.yaml            # OpenAPI 3.0.3 specification
 ├── src/
 │   ├── main.rs                 # Server entry point & graceful shutdown
-│   ├── lib.rs                  # Module exports
+│   ├── lib.rs                  # Module root exports
 │   ├── config.rs               # Strongly-typed environment configs
 │   ├── error.rs                # Standard AppError & IntoResponse
 │   ├── state.rs                # Shared AppState
@@ -57,34 +53,15 @@ Charupi-Api/
 
 ---
 
-## Endpoint Aktif
-
-| Method | Endpoint | Deskripsi |
-| :--- | :--- | :--- |
-| `GET` | `/health` | Pemeriksaan kesehatan layanan |
-| `GET` | `/docs/` | Dokumentasi API interaktif Scalar |
-
-**Contoh Response `/health`:**
-```json
-{
-  "status": "ok",
-  "service": "charupi-api",
-  "version": "0.1.0",
-  "environment": "development"
-}
-```
-
----
-
-## Menjalankan Server
+## Running the Server
 
 ```bash
 # Debug mode
 cargo run
 
-# Release mode
+# Release mode (fully optimized)
 cargo run --release
 
-# Docker
+# Run with Docker Compose
 docker compose up -d
 ```
