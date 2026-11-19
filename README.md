@@ -4,17 +4,22 @@
 > Disusun dengan struktur modular terstandarisasi (**routes**, **handlers**, **middleware**, **config**, **error**, **state**) yang saat ini menjalankan endpoint `/health`.  
 > Disertai skill komprehensif **`rust-axum-best-practices`** untuk referensi arsitektur dan performa saat pengembangan fitur backend lanjutan dimulai.
 
-[![Swagger API Documentation](https://img.shields.io/badge/Swagger-API%20Documentation-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)](https://agungs17.github.io/Charupi-Api/)
+[![Scalar API Documentation](https://img.shields.io/badge/Scalar-API%20Reference-8A2BE2?style=for-the-badge&logo=openapi-initiative&logoColor=white)](http://localhost:8080/docs/)
 
 ---
 
-## 📖 API Documentation (Swagger UI)
+## 📖 API Documentation (Scalar Interactive Reference)
 
-Dokumentasi API interaktif berbasis Swagger / OpenAPI 3.0 sudah disiapkan dan di-host via GitHub Pages:
+Dokumentasi API interaktif menggunakan **Scalar** (modern OpenAPI reference dengan Dark Mode & multi-language code snippets otomatis).
 
-👉 **[📖 Buka Swagger API Documentation](https://agungs17.github.io/Charupi-Api/)**
+### Cara Mengakses:
 
-Melalui halaman Swagger tersebut, Anda dapat melihat spesifikasi parameter, model response, serta menguji request secara live menggunakan fitur **Try it out**.
+1. **Secara Lokal (Direct dari Server Rust):**
+   Cukup jalankan server (`cargo run`), lalu buka browser ke:  
+   👉 **[http://localhost:8080/docs/](http://localhost:8080/docs/)**
+
+2. **Secara Online (GitHub Pages / Cloudflare Pages):**  
+   👉 **[https://agungs17.github.io/Charupi-Api/](https://agungs17.github.io/Charupi-Api/)**
 
 ---
 
@@ -22,12 +27,12 @@ Melalui halaman Swagger tersebut, Anda dapat melihat spesifikasi parameter, mode
 
 ```
 Charupi-Api/
-├── Cargo.toml                  # Dependensi crate & release profile
+├── Cargo.toml                  # Dependensi crate (Axum, Tokio, Tower-HTTP)
 ├── Dockerfile                  # Multi-stage container build
 ├── docker-compose.yml          # Container orchestration
 ├── .env.example                # Template konfigurasi environment
-├── docs/                       # Swagger UI untuk GitHub Pages
-│   ├── index.html              # Swagger UI web standalone
+├── docs/                       # Scalar API Reference
+│   ├── index.html              # Scalar web client (@scalar/api-reference)
 │   └── openapi.yaml            # Spesifikasi OpenAPI 3.0.3
 ├── src/
 │   ├── main.rs                 # Server entry point & graceful shutdown
@@ -36,7 +41,7 @@ Charupi-Api/
 │   ├── error.rs                # Standard AppError & IntoResponse
 │   ├── state.rs                # Shared AppState
 │   ├── routes/
-│   │   ├── mod.rs              # Router aggregation
+│   │   ├── mod.rs              # Router aggregation (/health & /docs)
 │   │   └── health.rs           # /health route
 │   ├── handlers/
 │   │   ├── mod.rs              # Handler exports
@@ -57,8 +62,9 @@ Charupi-Api/
 | Method | Endpoint | Deskripsi |
 | :--- | :--- | :--- |
 | `GET` | `/health` | Pemeriksaan kesehatan layanan |
+| `GET` | `/docs/` | Dokumentasi API interaktif Scalar |
 
-**Contoh Response:**
+**Contoh Response `/health`:**
 ```json
 {
   "status": "ok",
