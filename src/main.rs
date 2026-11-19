@@ -1,14 +1,9 @@
-use std::time::Duration;
 use tokio::net::TcpListener;
 use tokio::signal;
-use tower_http::compression::CompressionLayer;
-use tower_http::limit::RequestBodyLimitLayer;
-use tower_http::timeout::TimeoutLayer;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 use charupi_api::{
     config::AppConfig,
-    db::{create_pool, run_migrations},
     middleware::{cors_layer, trace_layer},
     routes::create_router,
     state::AppState,
@@ -20,7 +15,7 @@ async fn main() -> anyhow::Result<()> {
     tracing_subscriber::registry()
         .with(
             tracing_subscriber::EnvFilter::try_from_default_env()
-                .unwrap_or_else(|_| "charupi_api=debug,tower_http=info,sqlx=warn".into()),
+                .unwrap_or_else(|_| "charupi_api=debug,tower_http=info".into()),
         )
         .with(tracing_subscriber::fmt::layer())
         .init();
@@ -36,35 +31,20 @@ async fn main() -> anyhow::Result<()> {
         "Configuration loaded successfully"
     );
 
-    // 3. Inisialisasi Database Connection Pool & Jalankan Migrasi
-    let db_pool = create_pool(&config).await?;
-    run_migrations(&db_pool).await?;
+    // 3. Inisialisasi Shared Application State
+    let state = AppState::new(config.clone());
 
-    // 4. Inisialisasi Client HTTP Teroptimasi (Connection Pooling)
-    let http_client = reqwest::Client::builder()
-        .pool_idle_timeout(Duration::from_secs(90))
-        .pool_max_idle_per_host(10)
-        .tcp_nodelay(true)
-        .timeout(Duration::from_secs(config.omniroute_timeout_secs))
-        .build()?;
-
-    // 5. Inisialisasi Shared Application State
-    let state = AppState::new(db_pool.clone(), http_client, config.clone());
-
-    // 6. Rakit Router dengan Layer Middleware Terstandarisasi
+    // 4. Rakit Router dengan Layer Middleware (CORS & Tracing Logging)
     let app = create_router(state)
         .layer(trace_layer())
-        .layer(cors_layer())
-        .layer(CompressionLayer::new())
-        .layer(RequestBodyLimitLayer::new(10 * 1024 * 1024)) // Batas payload 10MB
-        .layer(TimeoutLayer::new(Duration::from_secs(180)));
+        .layer(cors_layer());
 
-    // 7. Binding TCP Listener
+    // 5. Binding TCP Listener
     let addr = config.socket_addr()?;
     let listener = TcpListener::bind(addr).await?;
     tracing::info!("Server listening on http://{}", addr);
 
-    // 8. Menjalankan Server dengan Graceful Shutdown Listener
+    // 6. Menjalankan Server dengan Graceful Shutdown Listener
     axum::serve(listener, app)
         .with_graceful_shutdown(shutdown_signal())
         .await?;
