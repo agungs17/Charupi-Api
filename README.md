@@ -1,65 +1,50 @@
 # Charupi-Api
 
-> **Modular Axum Service for Charupi**  
-> Built with a standardized modular architecture (**routes**, **handlers**, **middleware**, **config**, **error**, **state**) running on Rust Axum, with the `/health` endpoint enabled.  
-> Accompanied by the comprehensive **`rust-axum-best-practices`** skill for architectural guidance and high-performance backend engineering.
+> **Modular Backend Service for Charupi**  
+> High-performance backend gateway and service built with Rust, Axum, Tokio, and Tower-HTTP.  
+> Designed with clean separation of concerns and accompanied by the comprehensive **`rust-axum-best-practices`** skill.
 
 [![Scalar API Documentation](https://img.shields.io/badge/Scalar-API%20Reference-8A2BE2?style=for-the-badge&logo=openapi-initiative&logoColor=white)](http://localhost:8080/docs/)
 
 ---
 
-## 📖 API Documentation (Scalar Interactive Reference)
+## 📖 API Documentation
 
-Interactive API documentation powered by **Scalar** (a modern OpenAPI reference featuring built-in Dark Mode and automatic multi-language code snippets).
+Interactive API documentation powered by **Scalar** with built-in Dark Mode and multi-language code examples.
 
 ### How to Access:
 
-Start the server (`cargo run`), then open your browser at:  
+Start the server, then open your browser at:  
 👉 **[http://localhost:8080/docs/](http://localhost:8080/docs/)**
 
 ---
 
-## Modular Project Structure
+## Project Structure
 
 ```
 Charupi-Api/
-├── Cargo.toml                  # Crate dependencies (Axum, Tokio, Tower-HTTP)
-├── Dockerfile                  # Multi-stage container build
-├── docker-compose.yml          # Container orchestration
-├── .env.example                # Environment configuration template
-├── docs/                       # Scalar API Reference
-│   ├── index.html              # Scalar web client (@scalar/api-reference)
-│   └── openapi.yaml            # OpenAPI 3.0.3 specification
-├── src/
-│   ├── main.rs                 # Server entry point & graceful shutdown
-│   ├── lib.rs                  # Module root exports
-│   ├── config.rs               # Strongly-typed environment configs
-│   ├── error.rs                # Standard AppError & IntoResponse
-│   ├── state.rs                # Shared AppState
-│   ├── routes/
-│   │   ├── mod.rs              # Router aggregation (/health & /docs)
-│   │   └── health.rs           # /health route
-│   ├── handlers/
-│   │   ├── mod.rs              # Handler exports
-│   │   └── health.rs           # /health handler logic
-│   └── middleware/
-│       ├── mod.rs              # Middleware exports
-│       ├── cors.rs             # Permissive CORS layer
-│       └── logging.rs          # Tracing HTTP request logger
-└── .agents/
-    └── skills/
-        └── rust-axum-best-practices/ # Comprehensive engineering skill
+├── docs/       # Interactive API reference and OpenAPI specifications
+├── src/        # Application source code
+│   ├── handlers/   # HTTP request handlers
+│   ├── middleware/ # Request logging and CORS layers
+│   └── routes/     # Route declarations and endpoints
+└── .agents/    # Engineering guidelines and best-practice skills
 ```
 
 ---
 
-## Running the Server
+## Getting Started
+
+### Prerequisites
+- [Rust toolchain](https://www.rust-lang.org/tools/install) (Edition 2021, Rust 1.80+)
+
+### Running the Server
 
 ```bash
 # Debug mode
 cargo run
 
-# Release mode (fully optimized)
+# Release mode (optimized)
 cargo run --release
 
 # Run with Docker Compose
