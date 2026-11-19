@@ -1,0 +1,58 @@
+openapi: 3.0.3
+info:
+  title: Charupi API Documentation
+  description: |
+    API documentation for **Charupi-Api**, the backend gateway and business logic service for Charupi.
+    Built with Rust, Axum, Tokio, and Tower-HTTP.
+  version: 0.1.0
+  contact:
+    name: Charupi Team
+servers:
+  - url: http://localhost:8080
+    description: Local Development Server
+paths:
+  /health:
+    get:
+      summary: Health Check
+      description: Returns the health status, service metadata, and active environment.
+      operationId: healthCheck
+      tags:
+        - System & Health
+      responses:
+        '200':
+          description: Service is healthy and operational.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+              example:
+                status: "ok"
+                service: "charupi-api"
+                version: "0.1.0"
+                environment: "development"
+components:
+  schemas:
+    HealthResponse:
+      type: object
+      required:
+        - status
+        - service
+        - version
+        - environment
+      properties:
+        status:
+          type: string
+          description: Operational status of the service
+          example: "ok"
+        service:
+          type: string
+          description: Name of the service
+          example: "charupi-api"
+        version:
+          type: string
+          description: Semantic application version
+          example: "0.1.0"
+        environment:
+          type: string
+          description: Current runtime environment
+          example: "development"
