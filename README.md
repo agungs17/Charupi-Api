@@ -4,7 +4,7 @@
 > High-performance backend gateway and service built with Rust, Axum, Tokio, and Tower-HTTP.  
 > Designed with clean separation of concerns and accompanied by the comprehensive **`rust-axum-best-practices`** skill.
 
-[![Scalar API Documentation](https://img.shields.io/badge/Scalar-API%20Reference-8A2BE2?style=for-the-badge&logo=openapi-initiative&logoColor=white)](http://localhost:8080/docs/)
+[![Scalar API Documentation](https://img.shields.io/badge/Scalar-API%20Reference-8A2BE2?style=for-the-badge&logo=openapi-initiative&logoColor=white)](http://localhost:3000/docs/)
 
 ---
 
@@ -15,7 +15,7 @@ Interactive API documentation powered by **Scalar** with built-in Dark Mode and 
 ### How to Access:
 
 Start the server, then open your browser at:  
-👉 **[http://localhost:8080/docs/](http://localhost:8080/docs/)**
+👉 **[http://localhost:3000/docs/](http://localhost:3000/docs/)**
 
 ---
 

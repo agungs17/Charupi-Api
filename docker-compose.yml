@@ -1,14 +1,22 @@
 services:
-  charupi-api:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: charupi-api
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: charupi-postgres
     restart: unless-stopped
-    ports:
-      - "8080:8080"
     environment:
-      - HOST=0.0.0.0
-      - PORT=8080
-      - ENVIRONMENT=production
-      - RUST_LOG=charupi_api=info,tower_http=info
+      POSTGRES_USER: ${DB_USER:-charupi}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-charupi_password}
+      POSTGRES_DB: ${DB_NAME:-charupi_db}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-charupi} -d ${DB_NAME:-charupi_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:
